@@ -3,6 +3,7 @@ using System;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Data;
+using System.Data.Common;
 
 namespace DatabaseConnectivity;
 public class Program
@@ -27,12 +28,20 @@ public class Program
         }*/
         //GetRegions();
         //InsertRegions(13,"MZ");
-        //UpdateRegion(13,"GG");
-        //DeleteRegion(13);
-        //GetRegionById(1);
-        GetJobs();
+        //UpdateRegions(13,"GG");
+        //DeleteRegions(13);
+        //GetRegionsById(1);
+
+        //GetJobs();
+        //InsertJobs(13, "Chief Officer", 9999, 9999);
+        //UpdateJobs(13, "Programmer", 4909, 4909);
+        //DeleteJobs(13);
+        //GetJobsById(11);
+
+        GetCountries();
+        //InsertCountries("MY", "Malaysia", 13);
+
     }
-    // GET ALL
     public static void GetRegions()
     {
         _connection = new SqlConnection(_connectionString);
@@ -71,143 +80,140 @@ public class Program
     // INSERT
     public static void InsertRegions(int id, string name)
     {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
+        _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "INSERT INTO Regions (Id, Name) VALUES (@id, @name)";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
         {
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.Connection = connection;
-            sqlCommand.CommandText = "INSERT INTO Regions (Id, Name) VALUES (@id, @name)";
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.Int;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
 
-            connection.Open();
-            SqlTransaction transaction = connection.BeginTransaction();
-            sqlCommand.Transaction = transaction;
+            SqlParameter pName = new SqlParameter();
+            pName.ParameterName = "@name";
+            pName.SqlDbType = SqlDbType.VarChar;
+            pName.Value = name;
+            sqlCommand.Parameters.Add(pName);
 
-            try
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
             {
-                SqlParameter pId = new SqlParameter();
-                pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.Int;
-                pId.Value = id;
-                sqlCommand.Parameters.Add(pId);
-
-                SqlParameter pName = new SqlParameter();
-                pName.ParameterName = "@name";
-                pName.SqlDbType = SqlDbType.VarChar;
-                pName.Value = name;
-                sqlCommand.Parameters.Add(pName);
-
-                int result = sqlCommand.ExecuteNonQuery();
-                if (result > 0)
-                {
-                    Console.WriteLine("Insert success.");
-                }
-                else
-                {
-                    Console.WriteLine("Insert failed.");
-                }
-
-                transaction.Commit();
-                connection.Close();
+                Console.WriteLine("Insert success.");
             }
-            catch
+            else
             {
-                transaction.Rollback();
-                Console.WriteLine("Error connecting to database.");
+                Console.WriteLine("Insert failed.");
             }
+
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error connecting to database.");
         }
     }
 
     // UPDATE
-    public static void UpdateRegion(int id, string newName)
+    public static void UpdateRegions(int id, string newName)
     {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
+        _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "UPDATE Regions SET Name = @newName WHERE Id = @id";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
         {
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.Connection = connection;
-            sqlCommand.CommandText = "UPDATE Regions SET Name = @newName WHERE Id = @id";
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.Int;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
 
-            connection.Open();
-            SqlTransaction transaction = connection.BeginTransaction();
-            sqlCommand.Transaction = transaction;
+            SqlParameter pNewName = new SqlParameter();
+            pNewName.ParameterName = "@newName";
+            pNewName.SqlDbType = SqlDbType.VarChar;
+            pNewName.Value = newName;
+            sqlCommand.Parameters.Add(pNewName);
 
-            try
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
             {
-                SqlParameter pId = new SqlParameter();
-                pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.Int;
-                pId.Value = id;
-                sqlCommand.Parameters.Add(pId);
-
-                SqlParameter pNewName = new SqlParameter();
-                pNewName.ParameterName = "@newName";
-                pNewName.SqlDbType = SqlDbType.VarChar;
-                pNewName.Value = newName;
-                sqlCommand.Parameters.Add(pNewName);
-
-                int result = sqlCommand.ExecuteNonQuery();
-                if (result > 0)
-                {
-                    Console.WriteLine("Update berhasil.");
-                }
-                else
-                {
-                    Console.WriteLine("Update gagal. Data dengan ID tersebut tidak ditemukan.");
-                }
-
-                transaction.Commit();
-                connection.Close();
+                Console.WriteLine("Update success.");
             }
-            catch
+            else
             {
-                transaction.Rollback();
-                Console.WriteLine("Kesalahan saat menghubungkan ke database.");
+                Console.WriteLine("Update failed.");
             }
+
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error connecting to database.");
         }
     }
 
     // DELETE
-    public static void DeleteRegion(int id)
+    public static void DeleteRegions(int id)
     {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
+        _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "DELETE FROM Regions WHERE Id = @id";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
         {
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.Connection = connection;
-            sqlCommand.CommandText = "DELETE FROM Regions WHERE Id = @id";
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.Int;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
 
-            connection.Open();
-            SqlTransaction transaction = connection.BeginTransaction();
-            sqlCommand.Transaction = transaction;
-
-            try
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
             {
-                SqlParameter pId = new SqlParameter();
-                pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.Int;
-                pId.Value = id;
-                sqlCommand.Parameters.Add(pId);
-
-                int result = sqlCommand.ExecuteNonQuery();
-                if (result > 0)
-                {
-                    Console.WriteLine("Penghapusan berhasil.");
-                }
-                else
-                {
-                    Console.WriteLine("Penghapusan gagal. Data dengan ID tersebut tidak ditemukan.");
-                }
-
-                transaction.Commit();
-                connection.Close();
+                Console.WriteLine("Delete success.");
             }
-            catch
+            else
             {
-                transaction.Rollback();
-                Console.WriteLine("Kesalahan saat menghubungkan ke database.");
+                Console.WriteLine("Delete failed.");
             }
+
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error connecting to database.");
         }
     }
 
     // GET BY ID
-    public static void GetRegionById(int id)
+    public static void GetRegionsById(int id)
     {
         _connection = new SqlConnection(_connectionString);
 
@@ -253,11 +259,250 @@ public class Program
 
     public static void GetJobs()
     {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandText = "SELECT * FROM Jobs";
+
+            try
+            {
+                connection.Open();
+                using SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        Console.WriteLine("Id: " + reader.GetString(0));
+                        Console.WriteLine("Title: " + reader.GetString(1));
+                        Console.WriteLine("Min_salary: " + reader.GetInt32(2));
+                        Console.WriteLine("Max_salary: " + reader.GetInt32(3));
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No jobs found.");
+                }
+
+                reader.Close();
+            }
+            catch
+            {
+                Console.WriteLine("Error connecting to database.");
+            }
+        }
+    }
+    
+    public static void InsertJobs(int id, string title, int min_salary, int max_salary)
+    {
         _connection = new SqlConnection(_connectionString);
 
         SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = _connection;
-        sqlCommand.CommandText = "SELECT * FROM Jobs";
+        sqlCommand.CommandText = "INSERT INTO Jobs (id, title, min_salary, max_salary) VALUES (@id, @title,@min_salary,@max_salary)";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.Char;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            SqlParameter pTitle = new SqlParameter();
+            pTitle.ParameterName = "@title";
+            pTitle.SqlDbType = SqlDbType.VarChar;
+            pTitle.Value = title;
+            sqlCommand.Parameters.Add(pTitle);
+
+            SqlParameter pMinSalary = new SqlParameter();
+            pMinSalary.ParameterName = "@min_salary";
+            pMinSalary.SqlDbType = SqlDbType.Int;
+            pMinSalary.Value = min_salary;
+            sqlCommand.Parameters.Add(pMinSalary);
+
+            SqlParameter pMaxSalary = new SqlParameter();
+            pMaxSalary.ParameterName = "@max_salary";
+            pMaxSalary.SqlDbType = SqlDbType.Int;
+            pMaxSalary.Value = max_salary;
+            sqlCommand.Parameters.Add(pMaxSalary);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Insert success.");
+            }
+            else
+            {
+                Console.WriteLine("Insert failed.");
+            }
+
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error connecting to database.");
+        }
+    }
+
+    public static void UpdateJobs(int id, string newTitle, int newMin_salary, int newMax_salary)
+    {
+        _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "UPDATE Jobs SET title = @newTitle, min_salary = @newMin_salary, max_salary = @newMax_salary WHERE Id = @id";
+
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.Char;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            SqlParameter pNewTitle = new SqlParameter();
+            pNewTitle.ParameterName = "@newTitle";
+            pNewTitle.SqlDbType = SqlDbType.VarChar;
+            pNewTitle.Value = newTitle;
+            sqlCommand.Parameters.Add(pNewTitle);
+
+            SqlParameter pNewMinSalary = new SqlParameter();
+            pNewMinSalary.ParameterName = "@newMin_salary";
+            pNewMinSalary.SqlDbType = SqlDbType.Int;
+            pNewMinSalary.Value = newMin_salary;
+            sqlCommand.Parameters.Add(pNewMinSalary);
+
+            SqlParameter pNewMaxSalary = new SqlParameter();
+            pNewMaxSalary.ParameterName = "@newMax_salary";
+            pNewMaxSalary.SqlDbType = SqlDbType.Int;
+            pNewMaxSalary.Value = newMax_salary;
+            sqlCommand.Parameters.Add(pNewMaxSalary);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Update success.");
+            }
+            else
+            {
+                Console.WriteLine("Update failed.");
+            }
+
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error connecting to database.");
+        }
+    }
+
+    public static void DeleteJobs(int id)
+    {
+        _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "DELETE FROM Jobs WHERE Id = @id";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.Int;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Delete success.");
+            }
+            else
+            {
+                Console.WriteLine("Delete failed.");
+            }
+
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error connecting to database.");
+        }
+    }
+
+    public static void GetJobsById(int id)
+    {
+        _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT * FROM Jobs WHERE ID = @id";
+
+        try
+        {
+            _connection.Open();
+
+            // Declare parameter
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.Int;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            using SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("Id: " + reader.GetString(0));
+                    Console.WriteLine("Title: " + reader.GetString(1));
+                    Console.WriteLine("Min_salary: " + reader.GetInt32(2));
+                    Console.WriteLine("Max_salary: " + reader.GetInt32(3));
+                }
+            }
+            else
+            {
+                Console.WriteLine("No region found with the given ID.");
+            }
+
+            reader.Close();
+            _connection.Close();
+        }
+        catch
+        {
+            Console.WriteLine("Error connecting to the database.");
+        }
+    }
+
+    public static void GetCountries()
+    {
+        _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT * FROM Countries";
 
         try
         {
@@ -268,15 +513,14 @@ public class Program
             {
                 while (reader.Read())
                 {
-                    Console.WriteLine("Id: " + reader.GetInt32(0));
-                    Console.WriteLine("Title: " + reader.GetString(1));
-                    Console.WriteLine("Min_salary: " + reader.GetInt32(2));
-                    Console.WriteLine("Max_salary: " + reader.GetInt32(3));
+                    Console.WriteLine("Id: " + reader.GetString(0));
+                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine("Region_id: " + reader.GetInt32(2));
                 }
             }
             else
             {
-                Console.WriteLine("No regions found.");
+                Console.WriteLine("No countries found.");
             }
 
             reader.Close();
@@ -284,6 +528,58 @@ public class Program
         }
         catch
         {
+            Console.WriteLine("Error connecting to database.");
+        }
+    }
+
+    public static void InsertCountries(string id, string name, int region_id) // Error
+    {
+        _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "INSERT INTO Countries (id, name, region_id ) VALUES (@id, @name, @region_id)";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.Char;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            SqlParameter pName = new SqlParameter();
+            pName.ParameterName = "@name";
+            pName.SqlDbType = SqlDbType.VarChar;
+            pName.Value = name;
+            sqlCommand.Parameters.Add(pName);
+
+            SqlParameter pRegion_id = new SqlParameter();
+            pRegion_id.ParameterName = "@region_id";
+            pRegion_id.SqlDbType = SqlDbType.Int;
+            pRegion_id.Value = region_id;
+            sqlCommand.Parameters.Add(pRegion_id);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Insert success.");
+            }
+            else
+            {
+                Console.WriteLine("Insert failed.");
+            }
+
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch
+        {
+            transaction.Rollback();
             Console.WriteLine("Error connecting to database.");
         }
     }
