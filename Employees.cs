@@ -8,20 +8,19 @@ using System.Threading.Tasks;
 
 namespace DatabaseConnectivity
 {
-    public class Department
+    public class Employees
     {
         private static string _connectionString = "Data Source = LAPTOP-6G2JJTAJ;Database = db_datakaryawan;Integrated Security = True;Connect Timeout = 30;";
 
         private static SqlConnection _connection;
 
-        public static void GetDepartment()
-
+        public static void GetRegions()
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "SELECT * FROM Department";
+            sqlCommand.CommandText = "SELECT * FROM Regions";
 
             try
             {
@@ -34,13 +33,11 @@ namespace DatabaseConnectivity
                     {
                         Console.WriteLine("Id: " + reader.GetInt32(0));
                         Console.WriteLine("Name: " + reader.GetString(1));
-                        Console.WriteLine("Location_id: " + reader.GetInt32(2));
-                        Console.WriteLine("Manager_id: " + reader.GetInt32(3));
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No Department found.");
+                    Console.WriteLine("No regions found.");
                 }
 
                 reader.Close();
@@ -52,13 +49,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void InsertDepartment(int id, string name, int location_id, int manager_id)
+        public static void InsertRegions(int id, string name)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "INSERT INTO Department (Id, Name, location_id, manager_id) VALUES (@id, @name, @location_id, manager_id)";
+            sqlCommand.CommandText = "INSERT INTO Regions (Id, Name) VALUES (@id, @name)";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -77,18 +74,6 @@ namespace DatabaseConnectivity
                 pName.SqlDbType = SqlDbType.VarChar;
                 pName.Value = name;
                 sqlCommand.Parameters.Add(pName);
-
-                SqlParameter pLocationId = new SqlParameter();
-                pLocationId.ParameterName = "@location_id";
-                pLocationId.SqlDbType = SqlDbType.Int;
-                pLocationId.Value = location_id;
-                sqlCommand.Parameters.Add(pLocationId);
-
-                SqlParameter pManagerId = new SqlParameter();
-                pLocationId.ParameterName = "@manager_id";
-                pLocationId.SqlDbType = SqlDbType.Int;
-                pLocationId.Value = manager_id;
-                sqlCommand.Parameters.Add(pLocationId);
 
                 int result = sqlCommand.ExecuteNonQuery();
                 if (result > 0)
@@ -110,13 +95,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void UpdateDepartment(int id, string newName, int newLocation_id, int newManager_id)
+        public static void UpdateRegions(int id, string newName)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "UPDATE Department SET Name = @newName, location_id = newLocation_id, manager_id = newManager_id  WHERE Id = @id";
+            sqlCommand.CommandText = "UPDATE Regions SET Name = @newName WHERE Id = @id";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -135,18 +120,6 @@ namespace DatabaseConnectivity
                 pNewName.SqlDbType = SqlDbType.VarChar;
                 pNewName.Value = newName;
                 sqlCommand.Parameters.Add(pNewName);
-
-                SqlParameter pNewLocationId = new SqlParameter();
-                pNewLocationId.ParameterName = "@newLocation_id";
-                pNewLocationId.SqlDbType = SqlDbType.Int;
-                pNewLocationId.Value = newLocation_id;
-                sqlCommand.Parameters.Add(pNewLocationId);
-
-                SqlParameter pNewManagerId = new SqlParameter();
-                pNewLocationId.ParameterName = "@newManager_id";
-                pNewLocationId.SqlDbType = SqlDbType.Int;
-                pNewLocationId.Value = newManager_id;
-                sqlCommand.Parameters.Add(pNewLocationId);
 
                 int result = sqlCommand.ExecuteNonQuery();
                 if (result > 0)
@@ -168,13 +141,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void DeleteDepartment(int id)
+        public static void DeleteRegions(int id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "DELETE FROM Department WHERE Id = @id";
+            sqlCommand.CommandText = "DELETE FROM Regions WHERE Id = @id";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -208,13 +181,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void GetDepartmentById(int id)
+        public static void GetRegionsById(int id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "SELECT * FROM Department WHERE ID = @id";
+            sqlCommand.CommandText = "SELECT * FROM Regions WHERE ID = @id";
 
             try
             {
@@ -235,13 +208,11 @@ namespace DatabaseConnectivity
                     {
                         Console.WriteLine("Id: " + reader.GetInt32(0));
                         Console.WriteLine("Name: " + reader.GetString(1));
-                        Console.WriteLine("Location_id: " + reader.GetInt32(2));
-                        Console.WriteLine("Manager_id: " + reader.GetInt32(3));
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No Department found with the given ID.");
+                    Console.WriteLine("No region found with the given ID.");
                 }
 
                 reader.Close();

@@ -26,20 +26,19 @@ public class Program
         {
             Console.WriteLine("Error connecting to database.");
         }*/
-        //GetRegions();
-        //InsertRegions(13,"MZ");
-        //UpdateRegions(13,"GG");
-        //DeleteRegions(13);
-        //GetRegionsById(1);
+        //Region.GetRegions();
+        //Region.InsertRegions(13,"MZ");
+        //Region.UpdateRegions(13,"GG");
+        //Region.DeleteRegions(13);
+        //Region.GetRegionsById(1);
 
-        //GetJobs();
-        //InsertJobs(13, "Chief Officer", 9999, 9999);
-        //UpdateJobs(13, "Programmer", 4909, 4909);
-        //DeleteJobs(13);
-        //GetJobsById(11);
+        //Jobs.GetJobs();
+        //Jobs.InsertJobs(13, "Chief Officer", 9999, 9999);
+        //Jobs.UpdateJobs(13, "Programmer", 4909, 4909);
+        //Jobs.DeleteJobs(13);
+        //Jobs.GetJobsById(11);
 
         //GetCountries();
         //InsertCountries("MY", "Malaysia", 13);
-
     }
 }

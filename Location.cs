@@ -5,23 +5,23 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace DatabaseConnectivity
 {
-    public class Department
+    public class Location
     {
         private static string _connectionString = "Data Source = LAPTOP-6G2JJTAJ;Database = db_datakaryawan;Integrated Security = True;Connect Timeout = 30;";
 
         private static SqlConnection _connection;
 
-        public static void GetDepartment()
-
+        public static void GetLocation()
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "SELECT * FROM Department";
+            sqlCommand.CommandText = "SELECT * FROM Location";
 
             try
             {
@@ -33,14 +33,16 @@ namespace DatabaseConnectivity
                     while (reader.Read())
                     {
                         Console.WriteLine("Id: " + reader.GetInt32(0));
-                        Console.WriteLine("Name: " + reader.GetString(1));
-                        Console.WriteLine("Location_id: " + reader.GetInt32(2));
-                        Console.WriteLine("Manager_id: " + reader.GetInt32(3));
+                        Console.WriteLine("Street Address: " + reader.GetString(1));
+                        Console.WriteLine("Postal Code: " + reader.GetString(2));
+                        Console.WriteLine("City: " + reader.GetString(3));
+                        Console.WriteLine("State Province: " + reader.GetString(4));
+                        Console.WriteLine("Country ID: " + reader.GetString(5));
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No Department found.");
+                    Console.WriteLine("No Location found.");
                 }
 
                 reader.Close();
@@ -52,13 +54,14 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void InsertDepartment(int id, string name, int location_id, int manager_id)
+        public static void InsertLocation(int id, string street_address, string postal_code, string city, string state_province, string country_id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "INSERT INTO Department (Id, Name, location_id, manager_id) VALUES (@id, @name, @location_id, manager_id)";
+            sqlCommand.CommandText = "INSERT INTO Location (id, street_address, postal_code, city, state_province, country_id) " +
+                "VALUES (@id, @street_address, @postal_code, @city, @state_province, @country_id)";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -72,23 +75,35 @@ namespace DatabaseConnectivity
                 pId.Value = id;
                 sqlCommand.Parameters.Add(pId);
 
-                SqlParameter pName = new SqlParameter();
-                pName.ParameterName = "@name";
-                pName.SqlDbType = SqlDbType.VarChar;
-                pName.Value = name;
-                sqlCommand.Parameters.Add(pName);
+                SqlParameter pStreetAddress = new SqlParameter();
+                pStreetAddress.ParameterName = "@street_address";
+                pStreetAddress.SqlDbType = SqlDbType.VarChar;
+                pStreetAddress.Value = street_address;
+                sqlCommand.Parameters.Add(pStreetAddress);
 
-                SqlParameter pLocationId = new SqlParameter();
-                pLocationId.ParameterName = "@location_id";
-                pLocationId.SqlDbType = SqlDbType.Int;
-                pLocationId.Value = location_id;
-                sqlCommand.Parameters.Add(pLocationId);
+                SqlParameter pPostalCode = new SqlParameter();
+                pPostalCode.ParameterName = "@postal_code";
+                pPostalCode.SqlDbType = SqlDbType.VarChar;
+                pPostalCode.Value = postal_code;
+                sqlCommand.Parameters.Add(pPostalCode);
 
-                SqlParameter pManagerId = new SqlParameter();
-                pLocationId.ParameterName = "@manager_id";
-                pLocationId.SqlDbType = SqlDbType.Int;
-                pLocationId.Value = manager_id;
-                sqlCommand.Parameters.Add(pLocationId);
+                SqlParameter pCity = new SqlParameter();
+                pCity.ParameterName = "@city";
+                pCity.SqlDbType = SqlDbType.VarChar;
+                pCity.Value = city;
+                sqlCommand.Parameters.Add(pCity);
+
+                SqlParameter pStateProvince = new SqlParameter();
+                pStateProvince.ParameterName = "@state_province";
+                pStateProvince.SqlDbType = SqlDbType.VarChar;
+                pStateProvince.Value = state_province;
+                sqlCommand.Parameters.Add(pStateProvince);
+
+                SqlParameter pCountryId = new SqlParameter();
+                pCountryId.ParameterName = "@country_id";
+                pCountryId.SqlDbType = SqlDbType.Char;
+                pCountryId.Value = country_id;
+                sqlCommand.Parameters.Add(pCountryId);
 
                 int result = sqlCommand.ExecuteNonQuery();
                 if (result > 0)
@@ -110,13 +125,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void UpdateDepartment(int id, string newName, int newLocation_id, int newManager_id)
+        public static void UpdateLocation(int id, string newStreet_address, string newPostal_code, string newCity, string newState_province, string newCountry_id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "UPDATE Department SET Name = @newName, location_id = newLocation_id, manager_id = newManager_id  WHERE Id = @id";
+            sqlCommand.CommandText = "UPDATE Location SET street_address = @newStreet_address, postal_code = newPostal_code, city = newCity, state_province = newState_province,country_id = newCountry_id WHERE id = @id";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -130,23 +145,35 @@ namespace DatabaseConnectivity
                 pId.Value = id;
                 sqlCommand.Parameters.Add(pId);
 
-                SqlParameter pNewName = new SqlParameter();
-                pNewName.ParameterName = "@newName";
-                pNewName.SqlDbType = SqlDbType.VarChar;
-                pNewName.Value = newName;
-                sqlCommand.Parameters.Add(pNewName);
+                SqlParameter pNewStreetAddress = new SqlParameter();
+                pNewStreetAddress.ParameterName = "@newStreet_address";
+                pNewStreetAddress.SqlDbType = SqlDbType.VarChar;
+                pNewStreetAddress.Value = newStreet_address;
+                sqlCommand.Parameters.Add(pNewStreetAddress);
 
-                SqlParameter pNewLocationId = new SqlParameter();
-                pNewLocationId.ParameterName = "@newLocation_id";
-                pNewLocationId.SqlDbType = SqlDbType.Int;
-                pNewLocationId.Value = newLocation_id;
-                sqlCommand.Parameters.Add(pNewLocationId);
+                SqlParameter pNewPostalCode = new SqlParameter();
+                pNewPostalCode.ParameterName = "@newPostal_code";
+                pNewPostalCode.SqlDbType = SqlDbType.VarChar;
+                pNewPostalCode.Value = newPostal_code;
+                sqlCommand.Parameters.Add(pNewPostalCode);
 
-                SqlParameter pNewManagerId = new SqlParameter();
-                pNewLocationId.ParameterName = "@newManager_id";
-                pNewLocationId.SqlDbType = SqlDbType.Int;
-                pNewLocationId.Value = newManager_id;
-                sqlCommand.Parameters.Add(pNewLocationId);
+                SqlParameter pNewCity = new SqlParameter();
+                pNewCity.ParameterName = "@newCity";
+                pNewCity.SqlDbType = SqlDbType.VarChar;
+                pNewCity.Value = newCity;
+                sqlCommand.Parameters.Add(pNewCity);
+
+                SqlParameter pNewStateProvince = new SqlParameter();
+                pNewStateProvince.ParameterName = "@newState_province";
+                pNewStateProvince.SqlDbType = SqlDbType.VarChar;
+                pNewStateProvince.Value = newState_province;
+                sqlCommand.Parameters.Add(pNewStateProvince);
+
+                SqlParameter pNewCountryId = new SqlParameter();
+                pNewCountryId.ParameterName = "@newCountry_id";
+                pNewCountryId.SqlDbType = SqlDbType.Char;
+                pNewCountryId.Value = newCountry_id;
+                sqlCommand.Parameters.Add(pNewCountryId);
 
                 int result = sqlCommand.ExecuteNonQuery();
                 if (result > 0)
@@ -168,13 +195,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void DeleteDepartment(int id)
+        public static void DeleteLocation(int id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "DELETE FROM Department WHERE Id = @id";
+            sqlCommand.CommandText = "DELETE FROM Location WHERE Id = @id";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -208,13 +235,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void GetDepartmentById(int id)
+        public static void GetLocationById(int id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "SELECT * FROM Department WHERE ID = @id";
+            sqlCommand.CommandText = "SELECT * FROM Location WHERE ID = @id";
 
             try
             {
@@ -234,14 +261,16 @@ namespace DatabaseConnectivity
                     while (reader.Read())
                     {
                         Console.WriteLine("Id: " + reader.GetInt32(0));
-                        Console.WriteLine("Name: " + reader.GetString(1));
-                        Console.WriteLine("Location_id: " + reader.GetInt32(2));
-                        Console.WriteLine("Manager_id: " + reader.GetInt32(3));
+                        Console.WriteLine("Street Address: " + reader.GetString(1));
+                        Console.WriteLine("Postal Code: " + reader.GetString(2));
+                        Console.WriteLine("City: " + reader.GetString(3));
+                        Console.WriteLine("State Province: " + reader.GetString(4));
+                        Console.WriteLine("Country ID: " + reader.GetString(5));
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No Department found with the given ID.");
+                    Console.WriteLine("No Location found with the given ID.");
                 }
 
                 reader.Close();
