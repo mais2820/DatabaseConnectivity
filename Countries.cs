@@ -31,7 +31,7 @@ namespace DatabaseConnectivity
                 {
                     while (reader.Read())
                     {
-                        Console.WriteLine("Id: " + reader.GetInt32(0));
+                        Console.WriteLine("Id: " + reader.GetString(0));
                         Console.WriteLine("Name: " + reader.GetString(1));
                         Console.WriteLine("Region_id: " + reader.GetInt32(2));
                     }
@@ -201,7 +201,7 @@ namespace DatabaseConnectivity
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "SELECT * FROM Countries WHERE id = id";
+            sqlCommand.CommandText = "SELECT * FROM Countries WHERE id = @id";
 
             try
             {
@@ -220,7 +220,7 @@ namespace DatabaseConnectivity
                 {
                     while (reader.Read())
                     {
-                        Console.WriteLine("Id: " + reader.GetInt32(0));
+                        Console.WriteLine("Id: " + reader.GetString(0));
                         Console.WriteLine("Name: " + reader.GetString(1));
                         Console.WriteLine("Region_id: " + reader.GetInt32(2));
                     }

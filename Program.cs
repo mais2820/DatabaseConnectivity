@@ -31,7 +31,7 @@ public class Program
 
         while (!exit)
         {
-            Console.WriteLine("== MENU ==");
+            Console.WriteLine("== MENU DATABASE AL MAIS ==");
             Console.WriteLine("1. Employees");
             Console.WriteLine("2. Departments");
             Console.WriteLine("3. Jobs");
@@ -67,7 +67,6 @@ public class Program
                     break;
                 case 7:
                     ProcessSubMenuRegion();
-                    Console.ReadLine();
                     break;
                 case 8:
                     exit = true;
@@ -86,7 +85,7 @@ public class Program
 
             while (!back)
             {
-                Console.WriteLine("\n== REGION ==");
+                Console.WriteLine("== REGION ==");
 
                 Console.WriteLine("1. Get");
                 Console.WriteLine("2. GetById");
@@ -160,7 +159,7 @@ public class Program
 
             while (!back)
             {
-                Console.WriteLine("\n== JOBS ==");
+                Console.WriteLine("== JOBS ==");
 
                 Console.WriteLine("1. Get");
                 Console.WriteLine("2. GetById");
@@ -238,7 +237,70 @@ public class Program
 
         static void ProcessSubMenuCountries()
         {
-            Console.WriteLine("Invalid, coba lagi.");
-        }
+            bool back = false;
+
+            while (!back)
+            {
+                Console.WriteLine("== COUNTRIES ==");
+
+                Console.WriteLine("1. Get");
+                Console.WriteLine("2. GetById");
+                Console.WriteLine("3. Insert");
+                Console.WriteLine("4. Update");
+                Console.WriteLine("5. Delete");
+                Console.WriteLine("6. Back");
+
+                Console.Write("Input Menu: ");
+                int subMenuChoice = Convert.ToInt32(Console.ReadLine());
+                Console.Clear();
+
+                switch (subMenuChoice)
+                {
+                    case 1:
+                        Countries.GetCountries();
+                        Console.ReadLine();
+                        break;
+                    case 2:
+                        Console.Write("Input Region ID: ");
+                        int countriesGetId = Convert.ToInt32(Console.ReadLine());
+                        Countries.GetCountriesById(countriesGetId);
+                        Console.ReadLine();
+                        break;
+                    case 3:
+                        Console.Write("Input Countries ID: ");
+                        string countriesId = Console.ReadLine();
+                        Console.Write("Input Countries Name: ");
+                        string countriesName = Console.ReadLine();
+                        Console.Write("Input Region ID: ");
+                        int countriesRegionId = Convert.ToInt32(Console.ReadLine());
+                        Countries.InsertCountries(countriesId, countriesName, countriesRegionId);
+                        Console.ReadLine();
+                        break;
+                    case 4:
+                        Console.Write("Input Countries ID: ");
+                        string updateCountriesId = Console.ReadLine();
+                        Console.Write("Input Countries Name: ");
+                        string updateCountriesName = Console.ReadLine();
+                        Console.Write("Input Region ID: ");
+                        int updateCountriesRegionId = Convert.ToInt32(Console.ReadLine());
+                        Countries.UpdateCountries(updateCountriesId, updateCountriesName, updateCountriesRegionId);
+                        Console.ReadLine();
+                        break;
+                    case 5:
+                        Console.Write("Input Region ID: ");
+                        int deleteCountriesId = Convert.ToInt32(Console.ReadLine());
+                        Countries.DeleteCountries(deleteCountriesId);
+                        Console.ReadLine();
+                        break;
+                    case 6:
+                        back = true;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid menu choice. Please try again.");
+                        break;
+                }
+                Console.Clear();
+            }
+        } // BUG
     }
 }
