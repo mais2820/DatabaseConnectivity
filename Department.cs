@@ -58,7 +58,7 @@ namespace DatabaseConnectivity
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "INSERT INTO Department (Id, Name, location_id, manager_id) VALUES (@id, @name, @location_id, manager_id)";
+            sqlCommand.CommandText = "INSERT INTO Department (id, name, location_id, manager_id) VALUES (@id, @name, @location_id, manager_id)";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -68,7 +68,7 @@ namespace DatabaseConnectivity
             {
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.VarChar;
+                pId.SqlDbType = SqlDbType.Int;
                 pId.Value = id;
                 sqlCommand.Parameters.Add(pId);
 
@@ -126,7 +126,7 @@ namespace DatabaseConnectivity
             {
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.VarChar;
+                pId.SqlDbType = SqlDbType.Int;
                 pId.Value = id;
                 sqlCommand.Parameters.Add(pId);
 

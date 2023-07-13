@@ -14,13 +14,13 @@ namespace DatabaseConnectivity
 
         private static SqlConnection _connection;
 
-        public static void GetRegions()
+        public static void GetEmployees()
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "SELECT * FROM Regions";
+            sqlCommand.CommandText = "SELECT * FROM Employees";
 
             try
             {
@@ -32,12 +32,21 @@ namespace DatabaseConnectivity
                     while (reader.Read())
                     {
                         Console.WriteLine("Id: " + reader.GetInt32(0));
-                        Console.WriteLine("Name: " + reader.GetString(1));
+                        Console.WriteLine("First Name: " + reader.GetString(1));
+                        Console.WriteLine("Last Name: " + reader.GetString(2));
+                        Console.WriteLine("Email: " + reader.GetString(3));
+                        Console.WriteLine("Phone Number: " + reader.GetString(4));
+                        Console.WriteLine("Hire Date: " + reader.GetDateTime(5));
+                        Console.WriteLine("Salary: " + reader.GetInt32(6));
+                        Console.WriteLine("Commission PCT: " + reader.GetDecimal(7));
+                        Console.WriteLine("Manager Id: " + reader.GetInt32(8));
+                        Console.WriteLine("Job Id: " + reader.GetString(9));
+                        Console.WriteLine("Department Id: " + reader.GetInt32(10));
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No regions found.");
+                    Console.WriteLine("No Employees found.");
                 }
 
                 reader.Close();
@@ -49,13 +58,14 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void InsertRegions(int id, string name)
+        public static void InsertEmployees(int id, string first_name, string last_name, string email, string phone_number, DateTime hire_date, int salary, decimal commission_pct, int manager_id, string job_id, int department_id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "INSERT INTO Regions (Id, Name) VALUES (@id, @name)";
+            sqlCommand.CommandText = "INSERT INTO Employees (id, first_name, last_name, email, phone_number, hire_date, salary, \" +\r\n           \"commission_pct, manager_id, job_id, department_id) " +
+                "VALUES (@id, @first_name, @last_name, @email, @phone_number, @hire_date, @salary, @commission_pct, @manager_id, \" +\r\n           \"@job_id, @department_id)";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -63,17 +73,17 @@ namespace DatabaseConnectivity
 
             try
             {
-                SqlParameter pId = new SqlParameter();
-                pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.Int;
-                pId.Value = id;
-                sqlCommand.Parameters.Add(pId);
-
-                SqlParameter pName = new SqlParameter();
-                pName.ParameterName = "@name";
-                pName.SqlDbType = SqlDbType.VarChar;
-                pName.Value = name;
-                sqlCommand.Parameters.Add(pName);
+                sqlCommand.Parameters.AddWithValue("@id", id);
+                sqlCommand.Parameters.AddWithValue("@first_name", first_name);
+                sqlCommand.Parameters.AddWithValue("@last_name", last_name);
+                sqlCommand.Parameters.AddWithValue("@email", email);
+                sqlCommand.Parameters.AddWithValue("@phone_number", phone_number);
+                sqlCommand.Parameters.AddWithValue("@hire_date", hire_date);
+                sqlCommand.Parameters.AddWithValue("@salary", salary);
+                sqlCommand.Parameters.AddWithValue("@commission_pct", commission_pct);
+                sqlCommand.Parameters.AddWithValue("@manager_id", manager_id);
+                sqlCommand.Parameters.AddWithValue("@job_id", job_id);
+                sqlCommand.Parameters.AddWithValue("@department_id", department_id);
 
                 int result = sqlCommand.ExecuteNonQuery();
                 if (result > 0)
@@ -95,32 +105,33 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void UpdateRegions(int id, string newName)
+        public static void UpdateEmployees(int id, string first_name, string last_name, string email, string phone_number, DateTime hire_date, int salary, decimal commission_pct, int manager_id, string job_id, int department_id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "UPDATE Regions SET Name = @newName WHERE Id = @id";
+            sqlCommand.CommandText = "UPDATE Employees SET first_name = @first_name, last_name = @last_name, email = @email, phone_number = @phone_number, hire_date = @hire_date, salary = @salary, commission_pct = @commission_pct, manager_id = @manager_id, job_id = @job_id, department_id = @department_id " +
+                "WHERE Id = @id";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
             sqlCommand.Transaction = transaction;
 
+            sqlCommand.Parameters.AddWithValue("@id", id);
+            sqlCommand.Parameters.AddWithValue("@first_name", first_name);
+            sqlCommand.Parameters.AddWithValue("@last_name", last_name);
+            sqlCommand.Parameters.AddWithValue("@email", email);
+            sqlCommand.Parameters.AddWithValue("@phone_number", phone_number);
+            sqlCommand.Parameters.AddWithValue("@hire_date", hire_date);
+            sqlCommand.Parameters.AddWithValue("@salary", salary);
+            sqlCommand.Parameters.AddWithValue("@commission_pct", commission_pct);
+            sqlCommand.Parameters.AddWithValue("@manager_id", manager_id);
+            sqlCommand.Parameters.AddWithValue("@job_id", job_id);
+            sqlCommand.Parameters.AddWithValue("@department_id", department_id);
+            
             try
-            {
-                SqlParameter pId = new SqlParameter();
-                pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.Int;
-                pId.Value = id;
-                sqlCommand.Parameters.Add(pId);
-
-                SqlParameter pNewName = new SqlParameter();
-                pNewName.ParameterName = "@newName";
-                pNewName.SqlDbType = SqlDbType.VarChar;
-                pNewName.Value = newName;
-                sqlCommand.Parameters.Add(pNewName);
-
+            {   
                 int result = sqlCommand.ExecuteNonQuery();
                 if (result > 0)
                 {
@@ -141,13 +152,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void DeleteRegions(int id)
+        public static void DeleteEmployees(int id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "DELETE FROM Regions WHERE Id = @id";
+            sqlCommand.CommandText = "DELETE FROM Employees WHERE Id = @id";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -181,13 +192,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void GetRegionsById(int id)
+        public static void GetEmployeesById(int id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "SELECT * FROM Regions WHERE ID = @id";
+            sqlCommand.CommandText = "SELECT * FROM Employees WHERE ID = @id";
 
             try
             {
@@ -207,12 +218,21 @@ namespace DatabaseConnectivity
                     while (reader.Read())
                     {
                         Console.WriteLine("Id: " + reader.GetInt32(0));
-                        Console.WriteLine("Name: " + reader.GetString(1));
+                        Console.WriteLine("First Name: " + reader.GetString(1));
+                        Console.WriteLine("Last Name: " + reader.GetString(2));
+                        Console.WriteLine("Email: " + reader.GetString(3));
+                        Console.WriteLine("Phone Number: " + reader.GetString(4));
+                        Console.WriteLine("Hire Date: " + reader.GetDateTime(5));
+                        Console.WriteLine("Salary: " + reader.GetInt32(6));
+                        Console.WriteLine("Comission PCT: " + reader.GetDecimal(7));
+                        Console.WriteLine("Manager Id: " + reader.GetInt32(8));
+                        Console.WriteLine("Job Id: " + reader.GetString(9));
+                        Console.WriteLine("Department Id: " + reader.GetInt32(10));
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No region found with the given ID.");
+                    Console.WriteLine("No Employees found with the given ID.");
                 }
 
                 reader.Close();
