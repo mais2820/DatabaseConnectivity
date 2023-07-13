@@ -13,7 +13,7 @@ public class Program
     private static SqlConnection _connection;
     public static void Main()
     {
-        /*_connection = new SqlConnection(_connectionString);
+        _connection = new SqlConnection(_connectionString);
 
         try
         {
@@ -25,21 +25,7 @@ public class Program
         catch
         {
             Console.WriteLine("Error connecting to database.");
-        }*/
-        //Region.GetRegions();
-        //Region.InsertRegions(13,"MZ");
-        //Region.UpdateRegions(13,"GG");
-        //Region.DeleteRegions(13);
-        //Region.GetRegionsById(1);
-
-        //Jobs.GetJobs();
-        //Jobs.InsertJobs(13, "Chief Officer", 9999, 9999);
-        //Jobs.UpdateJobs(13, "Programmer", 4909, 4909);
-        //Jobs.DeleteJobs(13);
-        //Jobs.GetJobsById(11);
-
-        //GetCountries();
-        //InsertCountries("MY", "Malaysia", 13);
+        }
 
         bool exit = false;
 
@@ -190,35 +176,43 @@ public class Program
                 switch (subMenuChoice)
                 {
                     case 1:
-                        Region.GetRegions();
+                        Jobs.GetJobs();
                         Console.ReadLine();
                         break;
                     case 2:
-                        Console.Write("Input Region ID: ");
-                        int regionGetId = Convert.ToInt32(Console.ReadLine());
-                        Region.GetRegionsById(regionGetId);
+                        Console.Write("Input Jobs ID: ");
+                        int jobsGetId = Convert.ToInt32(Console.ReadLine());
+                        Jobs.GetJobsById(jobsGetId);
                         Console.ReadLine();
                         break;
                     case 3:
-                        Console.Write("Input Region ID: ");
-                        int regionId = Convert.ToInt32(Console.ReadLine());
-                        Console.Write("Input Region Name: ");
-                        string regionName = Console.ReadLine();
-                        Region.InsertRegions(regionId, regionName);
+                        Console.Write("Input Jobs ID: ");
+                        int jobsId = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Input Jobs Name: ");
+                        string jobsName = Console.ReadLine();
+                        Console.Write("Input Min Salary: ");
+                        int jobsMinSalary = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Input Max Salary ID: ");
+                        int jobsMaxSalary = Convert.ToInt32(Console.ReadLine());
+                        Jobs.InsertJobs(jobsId, jobsName, jobsMinSalary, jobsMaxSalary);
                         Console.ReadLine();
                         break;
                     case 4:
-                        Console.Write("Input Region ID: ");
-                        int updateRegionId = Convert.ToInt32(Console.ReadLine());
-                        Console.Write("Input Region Name: ");
-                        string updateRegionName = Console.ReadLine();
-                        Region.UpdateRegions(updateRegionId, updateRegionName);
+                        Console.Write("Input Jobs ID: ");
+                        int updateJobsId = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Input Jobs Name: ");
+                        string updateJobsName = Console.ReadLine();
+                        Console.Write("Input Min Salary: ");
+                        int updatejobsMinSalary = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Input Max Salary ID: ");
+                        int updatejobsMaxSalary = Convert.ToInt32(Console.ReadLine());
+                        Jobs.UpdateJobs(updateJobsId, updateJobsName, updatejobsMinSalary, updatejobsMaxSalary);
                         Console.ReadLine();
                         break;
                     case 5:
-                        Console.Write("Input Region ID: ");
-                        int deleteRegionId = Convert.ToInt32(Console.ReadLine());
-                        Region.DeleteRegions(deleteRegionId);
+                        Console.Write("Input Jobs ID: ");
+                        int deleteJobsId = Convert.ToInt32(Console.ReadLine());
+                        Jobs.DeleteJobs(deleteJobsId);
                         Console.ReadLine();
                         break;
                     case 6:
@@ -246,9 +240,5 @@ public class Program
         {
             Console.WriteLine("Invalid, coba lagi.");
         }
-
-
-
-
     }
 }

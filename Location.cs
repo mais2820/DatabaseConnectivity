@@ -37,7 +37,7 @@ namespace DatabaseConnectivity
                         Console.WriteLine("Postal Code: " + reader.GetString(2));
                         Console.WriteLine("City: " + reader.GetString(3));
                         Console.WriteLine("State Province: " + reader.GetString(4));
-                        Console.WriteLine("Country ID: " + reader.GetString(5));
+                        Console.WriteLine("Country ID: " + reader.GetInt32(5));
                     }
                 }
                 else
@@ -71,7 +71,7 @@ namespace DatabaseConnectivity
             {
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.Int;
+                pId.SqlDbType = SqlDbType.VarChar;
                 pId.Value = id;
                 sqlCommand.Parameters.Add(pId);
 
@@ -83,7 +83,7 @@ namespace DatabaseConnectivity
 
                 SqlParameter pPostalCode = new SqlParameter();
                 pPostalCode.ParameterName = "@postal_code";
-                pPostalCode.SqlDbType = SqlDbType.VarChar;
+                pPostalCode.SqlDbType = SqlDbType.Int;
                 pPostalCode.Value = postal_code;
                 sqlCommand.Parameters.Add(pPostalCode);
 
@@ -101,7 +101,7 @@ namespace DatabaseConnectivity
 
                 SqlParameter pCountryId = new SqlParameter();
                 pCountryId.ParameterName = "@country_id";
-                pCountryId.SqlDbType = SqlDbType.Char;
+                pCountryId.SqlDbType = SqlDbType.Int;
                 pCountryId.Value = country_id;
                 sqlCommand.Parameters.Add(pCountryId);
 
@@ -131,50 +131,20 @@ namespace DatabaseConnectivity
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "UPDATE Location SET street_address = @newStreet_address, postal_code = newPostal_code, city = newCity, state_province = newState_province,country_id = newCountry_id WHERE id = @id";
+            sqlCommand.CommandText = "UPDATE Location SET street_address = @newStreet_address, postal_code = @newPostal_code, city = @newCity, state_province = @newState_province,country_id = @newCountry_id WHERE id = @id";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
             sqlCommand.Transaction = transaction;
 
+            sqlCommand.Parameters.AddWithValue("@id", id);
+            sqlCommand.Parameters.AddWithValue("@newStreet_address", newStreet_address);
+            sqlCommand.Parameters.AddWithValue("@newPostal_code", newPostal_code);
+            sqlCommand.Parameters.AddWithValue("@newCity", newCity);
+            sqlCommand.Parameters.AddWithValue("@newState_province", newState_province);
+            sqlCommand.Parameters.AddWithValue("@newCountry_id", newCountry_id);
             try
             {
-                SqlParameter pId = new SqlParameter();
-                pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.Int;
-                pId.Value = id;
-                sqlCommand.Parameters.Add(pId);
-
-                SqlParameter pNewStreetAddress = new SqlParameter();
-                pNewStreetAddress.ParameterName = "@newStreet_address";
-                pNewStreetAddress.SqlDbType = SqlDbType.VarChar;
-                pNewStreetAddress.Value = newStreet_address;
-                sqlCommand.Parameters.Add(pNewStreetAddress);
-
-                SqlParameter pNewPostalCode = new SqlParameter();
-                pNewPostalCode.ParameterName = "@newPostal_code";
-                pNewPostalCode.SqlDbType = SqlDbType.VarChar;
-                pNewPostalCode.Value = newPostal_code;
-                sqlCommand.Parameters.Add(pNewPostalCode);
-
-                SqlParameter pNewCity = new SqlParameter();
-                pNewCity.ParameterName = "@newCity";
-                pNewCity.SqlDbType = SqlDbType.VarChar;
-                pNewCity.Value = newCity;
-                sqlCommand.Parameters.Add(pNewCity);
-
-                SqlParameter pNewStateProvince = new SqlParameter();
-                pNewStateProvince.ParameterName = "@newState_province";
-                pNewStateProvince.SqlDbType = SqlDbType.VarChar;
-                pNewStateProvince.Value = newState_province;
-                sqlCommand.Parameters.Add(pNewStateProvince);
-
-                SqlParameter pNewCountryId = new SqlParameter();
-                pNewCountryId.ParameterName = "@newCountry_id";
-                pNewCountryId.SqlDbType = SqlDbType.Char;
-                pNewCountryId.Value = newCountry_id;
-                sqlCommand.Parameters.Add(pNewCountryId);
-
                 int result = sqlCommand.ExecuteNonQuery();
                 if (result > 0)
                 {
@@ -265,7 +235,7 @@ namespace DatabaseConnectivity
                         Console.WriteLine("Postal Code: " + reader.GetString(2));
                         Console.WriteLine("City: " + reader.GetString(3));
                         Console.WriteLine("State Province: " + reader.GetString(4));
-                        Console.WriteLine("Country ID: " + reader.GetString(5));
+                        Console.WriteLine("Country ID: " + reader.GetInt32(5));
                     }
                 }
                 else

@@ -241,7 +241,7 @@ namespace DatabaseConnectivity
                 }
                 else
                 {
-                    Console.WriteLine("No region found with the given ID.");
+                    Console.WriteLine("No Jobs found with the given ID.");
                 }
 
                 reader.Close();

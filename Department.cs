@@ -68,7 +68,7 @@ namespace DatabaseConnectivity
             {
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.Int;
+                pId.SqlDbType = SqlDbType.VarChar;
                 pId.Value = id;
                 sqlCommand.Parameters.Add(pId);
 
@@ -85,10 +85,10 @@ namespace DatabaseConnectivity
                 sqlCommand.Parameters.Add(pLocationId);
 
                 SqlParameter pManagerId = new SqlParameter();
-                pLocationId.ParameterName = "@manager_id";
-                pLocationId.SqlDbType = SqlDbType.Int;
-                pLocationId.Value = manager_id;
-                sqlCommand.Parameters.Add(pLocationId);
+                pManagerId.ParameterName = "@manager_id";
+                pManagerId.SqlDbType = SqlDbType.Int;
+                pManagerId.Value = manager_id;
+                sqlCommand.Parameters.Add(pManagerId);
 
                 int result = sqlCommand.ExecuteNonQuery();
                 if (result > 0)
@@ -116,7 +116,7 @@ namespace DatabaseConnectivity
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "UPDATE Department SET Name = @newName, location_id = newLocation_id, manager_id = newManager_id  WHERE Id = @id";
+            sqlCommand.CommandText = "UPDATE Department SET Name = @newName, location_id = @newLocation_id, manager_id = @newManager_id  WHERE Id = @id";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -126,7 +126,7 @@ namespace DatabaseConnectivity
             {
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.Int;
+                pId.SqlDbType = SqlDbType.VarChar;
                 pId.Value = id;
                 sqlCommand.Parameters.Add(pId);
 
@@ -143,10 +143,10 @@ namespace DatabaseConnectivity
                 sqlCommand.Parameters.Add(pNewLocationId);
 
                 SqlParameter pNewManagerId = new SqlParameter();
-                pNewLocationId.ParameterName = "@newManager_id";
-                pNewLocationId.SqlDbType = SqlDbType.Int;
-                pNewLocationId.Value = newManager_id;
-                sqlCommand.Parameters.Add(pNewLocationId);
+                pNewManagerId.ParameterName = "@newManager_id";
+                pNewManagerId.SqlDbType = SqlDbType.Int;
+                pNewManagerId.Value = newManager_id;
+                sqlCommand.Parameters.Add(pNewManagerId);
 
                 int result = sqlCommand.ExecuteNonQuery();
                 if (result > 0)

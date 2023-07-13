@@ -31,7 +31,7 @@ namespace DatabaseConnectivity
                 {
                     while (reader.Read())
                     {
-                        Console.WriteLine("Id: " + reader.GetString(0));
+                        Console.WriteLine("Id: " + reader.GetInt32(0));
                         Console.WriteLine("Name: " + reader.GetString(1));
                         Console.WriteLine("Region_id: " + reader.GetInt32(2));
                     }
@@ -50,7 +50,7 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void InsertCountries(string id, string name, int region_id) // Error
+        public static void InsertCountries(string id, string name, int region_id) 
         {
             _connection = new SqlConnection(_connectionString);
 
@@ -66,7 +66,7 @@ namespace DatabaseConnectivity
             {
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = SqlDbType.Char;
+                pId.SqlDbType = SqlDbType.VarChar;
                 pId.Value = id;
                 sqlCommand.Parameters.Add(pId);
 
@@ -155,13 +155,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void DeleteCountries(int region_id)
+        public static void DeleteCountries(int id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "DELETE FROM Regions WHERE region_id = @region_id";
+            sqlCommand.CommandText = "DELETE FROM Countries WHERE id = @id";
 
             _connection.Open();
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -170,9 +170,9 @@ namespace DatabaseConnectivity
             try
             {
                 SqlParameter pId = new SqlParameter();
-                pId.ParameterName = "@region_id";
+                pId.ParameterName = "@id";
                 pId.SqlDbType = SqlDbType.Int;
-                pId.Value = region_id;
+                pId.Value = id;
                 sqlCommand.Parameters.Add(pId);
 
                 int result = sqlCommand.ExecuteNonQuery();
@@ -195,13 +195,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        public static void GetCountriesById(int region_id)
+        public static void GetCountriesById(int id)
         {
             _connection = new SqlConnection(_connectionString);
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = _connection;
-            sqlCommand.CommandText = "SELECT * FROM Regions WHERE region_id = region_id";
+            sqlCommand.CommandText = "SELECT * FROM Countries WHERE id = id";
 
             try
             {
@@ -209,9 +209,9 @@ namespace DatabaseConnectivity
 
                 // Declare parameter
                 SqlParameter pId = new SqlParameter();
-                pId.ParameterName = "@region_id";
+                pId.ParameterName = "@_id";
                 pId.SqlDbType = SqlDbType.Int;
-                pId.Value = region_id;
+                pId.Value = id;
                 sqlCommand.Parameters.Add(pId);
 
                 using SqlDataReader reader = sqlCommand.ExecuteReader();
@@ -220,14 +220,14 @@ namespace DatabaseConnectivity
                 {
                     while (reader.Read())
                     {
-                        Console.WriteLine("Id: " + reader.GetString(0));
+                        Console.WriteLine("Id: " + reader.GetInt32(0));
                         Console.WriteLine("Name: " + reader.GetString(1));
                         Console.WriteLine("Region_id: " + reader.GetInt32(2));
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No region found with the given ID.");
+                    Console.WriteLine("No Countries found with the given ID.");
                 }
 
                 reader.Close();
